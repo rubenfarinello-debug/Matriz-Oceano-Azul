@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz Oceano Azul — Diagnóstico Estratégico</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ocean-deep: #020c1b;
+    --ocean-mid: #061a30;
+    --ocean-surface: #0a2540;
+    --blue-primary: #0077ff;
+    --blue-glow: #00a8ff;
+    --cyan-accent: #00d4ff;
+    --teal-neon: #00f5c8;
+    --red-rival: #ff3b5c;
+    --gold-unique: #ffc94a;
+    --white: #f0f6ff;
+    --white-dim: rgba(240,246,255,0.6);
+    --white-faint: rgba(240,246,255,0.12);
+    --card-bg: rgba(6,26,48,0.9);
+    --border: rgba(0,168,255,0.18);
+    --border-glow: rgba(0,212,255,0.35);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ocean-deep);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(0,119,255,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 100%, rgba(0,245,200,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,168,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    padding: 56px 0 40px;
+    text-align: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cyan-accent);
+    margin-bottom: 20px;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal-neon);
+    box-shadow: 0 0 8px var(--teal-neon);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+
+  h1 span.blue { color: var(--cyan-accent); }
+  h1 span.gold { color: var(--gold-unique); }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--white-dim);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* Form */
+  .form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(20px);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cyan-accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  label .icon { font-size: 14px; }
+
+  input, textarea {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 12px 16px;
+    transition: all 0.2s;
+    resize: vertical;
+    outline: none;
+  }
+
+  select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 12px 16px;
+    transition: all 0.2s;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4ff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+
+  select option { background: #061a30; color: var(--white); }
+  select:focus { border-color: var(--blue-glow); background-color: rgba(0,168,255,0.07); box-shadow: 0 0 0 3px rgba(0,168,255,0.12); }
+
+  input::placeholder, textarea::placeholder { color: rgba(240,246,255,0.3); }
+
+  input:focus, textarea:focus {
+    border-color: var(--blue-glow);
+    background: rgba(0,168,255,0.07);
+    box-shadow: 0 0 0 3px rgba(0,168,255,0.12);
+  }
+
+  textarea { min-height: 90px; }
+
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white-dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--white-faint);
+  }
+
+  .section-label::after { content: ''; flex: 1; height: 1px; }
+
+  .btn-analyze {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--blue-primary), var(--cyan-accent));
+    border: none;
+    border-radius: 12px;
+    color: #000;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-analyze::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-analyze:hover::before { opacity: 1; }
+  .btn-analyze:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,119,255,0.4); }
+  .btn-analyze:active { transform: translateY(0); }
+  .btn-analyze:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Loading */
+  .loading-state {
+    display: none;
+    text-align: center;
+    padding: 60px 24px;
+  }
+
+  .ocean-loader {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+
+  .wave {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid var(--cyan-accent);
+    animation: ripple 1.5s ease-out infinite;
+  }
+
+  .wave:nth-child(2) { animation-delay: 0.5s; border-color: var(--blue-glow); }
+  .wave:nth-child(3) { animation-delay: 1s; border-color: var(--teal-neon); }
+
+  @keyframes ripple {
+    0% { width: 0; height: 0; top: 50%; left: 50%; opacity: 1; }
+    100% { width: 80px; height: 80px; top: 0; left: 0; opacity: 0; }
+  }
+
+  .loading-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    color: var(--cyan-accent);
+    animation: blink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Results */
+  #results { display: none; }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 36px;
+    padding: 32px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+  }
+
+  .company-name-display {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 800;
+    color: var(--gold-unique);
+    margin-bottom: 6px;
+  }
+
+  .results-subtitle {
+    font-size: 14px;
+    color: var(--white-dim);
+    font-weight: 300;
+  }
+
+  /* Matrix Grid */
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .matrix-card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 28px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+
+  .matrix-card:hover { transform: translateY(-3px); }
+
+  .matrix-card.red {
+    border: 1px solid rgba(255,59,92,0.3);
+  }
+
+  .matrix-card.red::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--red-rival), transparent);
+  }
+
+  .matrix-card.gold {
+    border: 1px solid rgba(255,201,74,0.3);
+  }
+
+  .matrix-card.gold::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold-unique), transparent);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .card-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .red .card-icon { background: rgba(255,59,92,0.15); }
+  .gold .card-icon { background: rgba(255,201,74,0.15); }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .red .card-title { color: var(--red-rival); }
+  .gold .card-title { color: var(--gold-unique); }
+
+  .item-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .item-list li {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--white);
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    font-weight: 300;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .item-list li .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .red .dot { background: var(--red-rival); }
+  .gold .dot { background: var(--gold-unique); }
+
+  /* ERRC Grid */
+  .errc-section {
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--white-dim);
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+
+  .errc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .errc-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .errc-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .errc-card.eliminate::before { background: #ff3b5c; }
+  .errc-card.reduce::before { background: #ff8c42; }
+  .errc-card.raise::before { background: #00d4ff; }
+  .errc-card.create::before { background: #00f5c8; }
+
+  .errc-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .eliminate .errc-label { color: #ff3b5c; }
+  .reduce .errc-label { color: #ff8c42; }
+  .raise .errc-label { color: #00d4ff; }
+  .create .errc-label { color: #00f5c8; }
+
+  .errc-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .errc-items li {
+    font-size: 13px;
+    color: var(--white);
+    font-weight: 300;
+    line-height: 1.5;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px;
+  }
+
+  /* Strategic Insight */
+  .insight-card {
+    background: linear-gradient(135deg, rgba(0,119,255,0.12), rgba(0,245,200,0.08));
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(20px);
+  }
+
+  .insight-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--teal-neon);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .insight-text {
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.75;
+    font-weight: 300;
+    white-space: pre-line;
+  }
+
+  /* Actions */
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .btn-secondary {
+    flex: 1;
+    min-width: 160px;
+    padding: 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--blue-glow);
+  }
+
+  .btn-restart {
+    flex: 1;
+    min-width: 160px;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid rgba(255,201,74,0.4);
+    border-radius: 10px;
+    color: var(--gold-unique);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .btn-restart:hover {
+    background: rgba(255,201,74,0.08);
+    border-color: var(--gold-unique);
+  }
+
+  /* Error */
+  .error-box {
+    display: none;
+    background: rgba(255,59,92,0.1);
+    border: 1px solid rgba(255,59,92,0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    color: #ff6b85;
+    font-size: 14px;
+    margin-top: 12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .matrix-grid { grid-template-columns: 1fr; }
+    .errc-grid { grid-template-columns: 1fr; }
+    .form-card { padding: 24px; }
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  .full-width { grid-column: 1 / -1; }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="badge">🌊 Metodologia Oceano Azul</div>
+    <h1>Matriz de <span class="blue">Concorrência</span></h1>
+    <p class="subtitle">Identifique onde você compete, onde você domina — e descubra o oceano azul que só a sua empresa pode navegar.</p>
+  </header>
+
+  <!-- FORM -->
+  <div id="formSection">
+    <div class="form-card">
+      <p class="section-label">🏢 Sua empresa</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label><span class="icon">🏷️</span> Nome da Empresa</label>
+          <input type="text" id="companyName" placeholder="Ex: Minha Empresa S.A.">
+        </div>
+        <div class="form-group">
+          <label><span class="icon">🎯</span> Segmento / Nicho</label>
+          <input type="text" id="segment" placeholder="Ex: Consultoria Empresarial">
+        </div>
+        <div class="form-group full">
+          <label><span class="icon">⚙️</span> Seus Produtos / Serviços / Características</label>
+          <textarea id="ownServices" placeholder="Liste tudo o que sua empresa oferece: produtos, serviços, diferenciais, atendimento, preço, tecnologia, suporte..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label><span class="icon">✨</span> Diferenciais que Você Já Percebe em Si</label>
+          <textarea id="ownDifferentials" placeholder="O que você acredita que te destaca? O que clientes elogiam? Processos exclusivos, metodologias, posicionamento..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <p class="section-label">🎯 Seu cliente ideal</p>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label><span class="icon">👤</span> Quem é seu público-alvo?</label>
+          <input type="text" id="targetAudience" placeholder="Ex: Empresários do varejo, 35–50 anos, faturamento entre R$500k e R$3M...">
+        </div>
+        <div class="form-group">
+          <label><span class="icon">😣</span> Principal dor antes de contratar</label>
+          <textarea id="clientPain" placeholder="O que o cliente sente, vive ou perde ANTES de te contratar? Qual problema te procura?"></textarea>
+        </div>
+        <div class="form-group">
+          <label><span class="icon">🏆</span> Transformação entregue</label>
+          <textarea id="clientResult" placeholder="O que o cliente conquista ou se torna DEPOIS de trabalhar com você?"></textarea>
+        </div>
+        <div class="form-group full">
+          <label><span class="icon">🚫</span> Quem deveria comprar mas não compra?</label>
+          <textarea id="nonConsumers" placeholder="Perfis que têm o problema mas ainda não te contratam — e por quê? Esse é o seu oceano azul."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <p class="section-label">💰 Modelo de negócio & estágio</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label><span class="icon">💵</span> Ticket médio & forma de venda</label>
+          <input type="text" id="ticket" placeholder="Ex: R$3.000/mês recorrente, R$15k pacote único...">
+        </div>
+        <div class="form-group">
+          <label><span class="icon">📣</span> Canal de aquisição principal</label>
+          <input type="text" id="acquisition" placeholder="Ex: Instagram orgânico, indicação, eventos, anúncios...">
+        </div>
+        <div class="form-group">
+          <label><span class="icon">📍</span> Fase do negócio</label>
+          <select id="businessStage">
+            <option value="">Selecione...</option>
+            <option value="iniciando">🌱 Iniciando (0–2 anos)</option>
+            <option value="crescendo">🚀 Crescendo (buscando escala)</option>
+            <option value="consolidado">🏛️ Consolidado (mantendo e expandindo)</option>
+            <option value="reinventando">🔄 Reinventando (pivotando ou reposicionando)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label><span class="icon">🧱</span> Maior obstáculo hoje</label>
+          <input type="text" id="mainObstacle" placeholder="Ex: Captar clientes, precificar, escalar sem perder qualidade...">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <p class="section-label">⚔️ Seus concorrentes</p>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label><span class="icon">🏴‍☠️</span> Principais Concorrentes</label>
+          <input type="text" id="competitors" placeholder="Ex: Empresa A, Empresa B, Freelancers do setor...">
+        </div>
+        <div class="form-group full">
+          <label><span class="icon">📋</span> O que os Concorrentes Oferecem</label>
+          <textarea id="competitorServices" placeholder="Liste os serviços, características e estratégias dos seus concorrentes que você conhece..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-analyze" id="analyzeBtn" onclick="runAnalysis()">
+      🌊 Gerar Diagnóstico Oceano Azul
+    </button>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" id="loadingState">
+    <div class="ocean-loader">
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+    </div>
+    <p class="loading-text" id="loadingMsg">Mapeando o oceano competitivo...</p>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="results-header">
+      <p style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);margin-bottom:8px;">Diagnóstico Estratégico</p>
+      <div class="company-name-display" id="displayCompanyName"></div>
+      <p class="results-subtitle" id="displaySegment"></p>
+    </div>
+
+    <!-- Competition Matrix -->
+    <div class="matrix-grid" id="matrixGrid">
+      <div class="matrix-card red">
+        <div class="card-header">
+          <div class="card-icon">⚔️</div>
+          <div>
+            <div class="card-title">Pontos de<br>Concorrência</div>
+            <div style="font-size:11px;color:var(--white-dim);margin-top:2px;">O que o mercado já oferece</div>
+          </div>
+        </div>
+        <ul class="item-list" id="competitionPoints"></ul>
+      </div>
+      <div class="matrix-card gold">
+        <div class="card-header">
+          <div class="card-icon">🏆</div>
+          <div>
+            <div class="card-title">Pontos de<br>Não Concorrência</div>
+            <div style="font-size:11px;color:var(--white-dim);margin-top:2px;">Seu oceano azul particular</div>
+          </div>
+        </div>
+        <ul class="item-list" id="uniquePoints"></ul>
+      </div>
+    </div>
+
+    <!-- ERRC Grid -->
+    <div class="errc-section">
+      <div class="section-title">🎲 Grade ERRC — Matriz de Ação</div>
+      <p class="section-desc">A ferramenta central da Estratégia do Oceano Azul: o que Eliminar, Reduzir, Aumentar e Criar para abrir um mercado sem concorrência.</p>
+      <div class="errc-grid" id="errcGrid">
+        <div class="errc-card eliminate">
+          <div class="errc-label">🗑️ Eliminar</div>
+          <ul class="errc-items" id="eliminate"></ul>
+        </div>
+        <div class="errc-card reduce">
+          <div class="errc-label">📉 Reduzir</div>
+          <ul class="errc-items" id="reduce"></ul>
+        </div>
+        <div class="errc-card raise">
+          <div class="errc-label">📈 Aumentar</div>
+          <ul class="errc-items" id="raise"></ul>
+        </div>
+        <div class="errc-card create">
+          <div class="errc-label">💡 Criar</div>
+          <ul class="errc-items" id="create"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strategic Insight -->
+    <div class="insight-card">
+      <div class="insight-title">🧭 Posicionamento Estratégico Recomendado</div>
+      <div class="insight-text" id="strategicInsight"></div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn-secondary" onclick="copyReport()">📋 Copiar Relatório</button>
+      <button class="btn-restart" onclick="restartTool()">↩ Nova Análise</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const loadingMessages = [
+  "Mapeando o oceano competitivo...",
+  "Identificando correntes de diferenciação...",
+  "Construindo sua vantagem estratégica...",
+  "Desenhando o mapa do oceano azul...",
+  "Analisando pontos cegos da concorrência..."
+];
+
+let loadingInterval;
+
+function cycleLoadingMessages() {
+  let i = 0;
+  const el = document.getElementById('loadingMsg');
+  loadingInterval = setInterval(() => {
+    i = (i + 1) % loadingMessages.length;
+    el.textContent = loadingMessages[i];
+  }, 2200);
+}
+
+function showLoading() {
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  cycleLoadingMessages();
+}
+
+function hideLoading() {
+  clearInterval(loadingInterval);
+  document.getElementById('loadingState').style.display = 'none';
+}
+
+function showError(msg) {
+  const box = document.getElementById('errorBox');
+  box.textContent = '⚠️ ' + msg;
+  box.style.display = 'block';
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('analyzeBtn').disabled = false;
+}
+
+function renderList(ulId, items, dotClass) {
+  const ul = document.getElementById(ulId);
+  ul.innerHTML = '';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="dot ${dotClass}"></span><span>${item}</span>`;
+    ul.appendChild(li);
+  });
+}
+
+function renderSimpleList(ulId, items) {
+  const ul = document.getElementById(ulId);
+  ul.innerHTML = '';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    ul.appendChild(li);
+  });
+}
+
+async function runAnalysis() {
+  const companyName = document.getElementById('companyName').value.trim();
+  const segment = document.getElementById('segment').value.trim();
+  const ownServices = document.getElementById('ownServices').value.trim();
+  const ownDifferentials = document.getElementById('ownDifferentials').value.trim();
+  const competitors = document.getElementById('competitors').value.trim();
+  const competitorServices = document.getElementById('competitorServices').value.trim();
+  const targetAudience = document.getElementById('targetAudience').value.trim();
+  const clientPain = document.getElementById('clientPain').value.trim();
+  const clientResult = document.getElementById('clientResult').value.trim();
+  const nonConsumers = document.getElementById('nonConsumers').value.trim();
+  const ticket = document.getElementById('ticket').value.trim();
+  const acquisition = document.getElementById('acquisition').value.trim();
+  const businessStage = document.getElementById('businessStage').value;
+  const mainObstacle = document.getElementById('mainObstacle').value.trim();
+
+  if (!companyName || !ownServices || !competitors) {
+    showError('Preencha pelo menos o nome da empresa, seus serviços e os concorrentes.');
+    return;
+  }
+
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('analyzeBtn').disabled = true;
+  showLoading();
+
+  const systemPrompt = `Você é um especialista sênior em Estratégia do Oceano Azul (W. Chan Kim & Renée Mauborgne) e análise competitiva. Sua missão é gerar um diagnóstico estratégico completo e acionável. Responda APENAS com um objeto JSON válido, sem texto antes ou depois, sem markdown, sem explicações fora do JSON. Use o seguinte formato exato:
+
+{
+  "competition_points": ["item1", "item2", "item3", "item4", "item5"],
+  "unique_points": ["item1", "item2", "item3", "item4", "item5"],
+  "errc": {
+    "eliminate": ["item1", "item2", "item3"],
+    "reduce": ["item1", "item2", "item3"],
+    "raise": ["item1", "item2", "item3"],
+    "create": ["item1", "item2", "item3"]
+  },
+  "strategic_insight": "Parágrafo rico e estratégico com 4-6 linhas descrevendo o posicionamento recomendado no Oceano Azul para esta empresa, considerando a fase do negócio, o perfil do cliente ideal, os não-consumidores identificados e o maior obstáculo atual — indicando qual mercado específico ela pode criar e qual proposta de valor tornará a concorrência irrelevante."
+}
+
+Cada lista deve ter entre 3 e 6 itens. Seja extremamente específico para o negócio descrito, nunca genérico. Escreva em português brasileiro.`;
+
+  const userPrompt = `Analise esta empresa com a Estratégia do Oceano Azul:
+
+EMPRESA: ${companyName}
+SEGMENTO: ${segment || 'não informado'}
+FASE DO NEGÓCIO: ${businessStage || 'não informado'}
+
+OFERTA:
+- Serviços e características: ${ownServices}
+- Diferenciais já percebidos: ${ownDifferentials || 'não informado'}
+- Ticket médio e forma de venda: ${ticket || 'não informado'}
+- Canal de aquisição principal: ${acquisition || 'não informado'}
+
+CLIENTE IDEAL:
+- Público-alvo: ${targetAudience || 'não informado'}
+- Principal dor antes de contratar: ${clientPain || 'não informado'}
+- Transformação entregue: ${clientResult || 'não informado'}
+- Quem deveria comprar mas não compra (não-consumidores): ${nonConsumers || 'não informado'}
+
+DESAFIO ATUAL:
+- Maior obstáculo hoje: ${mainObstacle || 'não informado'}
+
+CONCORRENTES:
+- Principais: ${competitors}
+- O que oferecem: ${competitorServices || 'não informado'}
+
+Gere o diagnóstico estratégico completo no formato JSON especificado.`;
+
+  const MAX_TENTATIVAS = 3;
+  let tentativa = 0;
+  let sucesso = false;
+
+  while (tentativa < MAX_TENTATIVAS && !sucesso) {
+    tentativa++;
+    try {
+      if (tentativa > 1) {
+        document.getElementById('loadingMsg').textContent = `Tentativa ${tentativa} de ${MAX_TENTATIVAS}...`;
+        await new Promise(r => setTimeout(r, 1500));
+      }
+
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system: systemPrompt,
+          messages: [{ role: "user", content: userPrompt }]
+        })
+      });
+
+      // Lê o body apenas uma vez
+      const raw = await response.text();
+
+      if (!response.ok) {
+        // Tenta extrair mensagem de erro legível
+        let errMsg = `Servidor retornou erro ${response.status}`;
+        try { const j = JSON.parse(raw); errMsg = j?.error?.message || errMsg; } catch {}
+        throw new Error(errMsg);
+      }
+
+      let data;
+      try { data = JSON.parse(raw); } catch { throw new Error('Resposta inválida do servidor.'); }
+
+      // Garante que content existe e tem texto
+      if (!data.content || !Array.isArray(data.content)) throw new Error('Formato de resposta inesperado.');
+      const rawText = data.content.map(b => b.text || '').join('').trim();
+      if (!rawText) throw new Error('Resposta vazia do modelo.');
+
+      // Extrai o primeiro bloco JSON válido do texto
+      const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('Nenhum JSON encontrado na resposta.');
+
+      let result;
+      try { result = JSON.parse(jsonMatch[0]); } catch { throw new Error('JSON malformado na resposta.'); }
+
+      // Valida campos obrigatórios
+      if (!result.competition_points || !result.unique_points || !result.errc || !result.strategic_insight) {
+        throw new Error('Resposta incompleta. Tentando novamente...');
+      }
+
+      sucesso = true;
+      hideLoading();
+      renderResults(result, companyName, segment);
+
+    } catch (err) {
+      if (tentativa >= MAX_TENTATIVAS) {
+        hideLoading();
+        showError(`Não foi possível gerar a análise após ${MAX_TENTATIVAS} tentativas. Tente novamente em alguns instantes. (${err.message})`);
+      }
+      // Senão, o while tenta de novo
+    }
+  }
+}
+
+function renderResults(data, companyName, segment) {
+  document.getElementById('displayCompanyName').textContent = companyName;
+  document.getElementById('displaySegment').textContent = segment ? `Segmento: ${segment}` : 'Diagnóstico Estratégico Oceano Azul';
+
+  renderList('competitionPoints', data.competition_points, 'red');
+  renderList('uniquePoints', data.unique_points, 'gold');
+
+  renderSimpleList('eliminate', data.errc.eliminate);
+  renderSimpleList('reduce', data.errc.reduce);
+  renderSimpleList('raise', data.errc.raise);
+  renderSimpleList('create', data.errc.create);
+
+  document.getElementById('strategicInsight').textContent = data.strategic_insight;
+
+  document.getElementById('results').style.display = 'block';
+
+  // Animate in
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restartTool() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('analyzeBtn').disabled = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyReport() {
+  const company = document.getElementById('displayCompanyName').textContent;
+  const competition = [...document.querySelectorAll('#competitionPoints li span:last-child')].map(e => '• ' + e.textContent).join('\n');
+  const unique = [...document.querySelectorAll('#uniquePoints li span:last-child')].map(e => '• ' + e.textContent).join('\n');
+  const eliminate = [...document.querySelectorAll('#eliminate li')].map(e => '• ' + e.textContent).join('\n');
+  const reduce = [...document.querySelectorAll('#reduce li')].map(e => '• ' + e.textContent).join('\n');
+  const raise = [...document.querySelectorAll('#raise li')].map(e => '• ' + e.textContent).join('\n');
+  const create = [...document.querySelectorAll('#create li')].map(e => '• ' + e.textContent).join('\n');
+  const insight = document.getElementById('strategicInsight').textContent;
+
+  const report = `🌊 DIAGNÓSTICO OCEANO AZUL — ${company}
+${'='.repeat(50)}
+
+⚔️ PONTOS DE CONCORRÊNCIA (O que o mercado já oferece):
+${competition}
+
+🏆 PONTOS DE NÃO CONCORRÊNCIA (Seu oceano azul):
+${unique}
+
+🎲 GRADE ERRC:
+
+🗑️ ELIMINAR:
+${eliminate}
+
+📉 REDUZIR:
+${reduce}
+
+📈 AUMENTAR:
+${raise}
+
+💡 CRIAR:
+${create}
+
+🧭 POSICIONAMENTO ESTRATÉGICO:
+${insight}
+
+— Gerado com Matriz Oceano Azul | EIXO EMPRESARIAL™`;
+
+  navigator.clipboard.writeText(report)
+    .then(() => alert('✅ Relatório copiado com sucesso!'))
+    .catch(() => alert('Não foi possível copiar. Tente selecionar e copiar manualmente.'));
+}
+</script>
+</body>
+</html>
